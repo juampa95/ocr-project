@@ -33,5 +33,3 @@ tesseract
 ```
 git clone https://github.com/tesseract-ocr/tesseract.git
 ```
-
-
