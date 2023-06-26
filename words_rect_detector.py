@@ -145,8 +145,10 @@ class TextRectanglesDetector:
 ################# TEST VARIAS IMAGENES ###################
 
 # Directorio de imágenes
-image_dir = 'test/img2/'  # directorio inculido en el repositorio para probar script. 
+# image_dir = 'test/img2/'  # directorio inculido en el repositorio para probar script. 
 # image_dir = 'test/imagenes/' # directorio incuido en el repositorio para probar scripts, pero necesita configuracion.
+
+image_dir = 'test/priv_img/'  # Directorio con imagenes que contienen infomración sensibles, por lo que no se compartira.
 
 # Obtener la lista de archivos .bmp en el directorio  
 image_files = glob.glob(image_dir + '*.bmp')
