@@ -1,0 +1,12 @@
+self.threshold = 100
+self.min_area = 15
+self.max_line_gap = 3
+self.min_char_width = 20
+self.max_char_width = 40
+self.min_char_height = 20
+self.max_char_height = 200
+self.min_total_width = 60
+self.max_total_width = 3000
+self.min_total_height = 20
+self.max_total_height = 100
+self.margin = 5
