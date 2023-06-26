@@ -24,7 +24,7 @@ class TextRectanglesDetector:
 
         # Convertir la imagen a escala de grises y aplicar desenfoque
         src_gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
-        # src_gray = cv.blur(src_gray, (3, 3))  # procesado anterior, se agregaron los tres pasos siguientes. 
+        # src_gray = cv.blur(src_gray, (3, 3))  # procesado anterior, se agregaron llas 5 lineas siguientes. 
 
         src_gray = cv.medianBlur(src_gray, 3)
 
@@ -145,7 +145,8 @@ class TextRectanglesDetector:
 ################# TEST VARIAS IMAGENES ###################
 
 # Directorio de imágenes
-image_dir = 'test/img2/'
+image_dir = 'test/img2/'  # directorio inculido en el repositorio para probar script. 
+# image_dir = 'test/imagenes/' # directorio incuido en el repositorio para probar scripts, pero necesita configuracion.
 
 # Obtener la lista de archivos .bmp en el directorio  
 image_files = glob.glob(image_dir + '*.bmp')
