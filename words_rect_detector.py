@@ -1,17 +1,18 @@
 import cv2 as cv
 import glob
+import numpy as np
 
 class TextRectanglesDetector:
     def __init__(self):
-        self.threshold = 70
-        self.min_area = 15
-        self.max_line_gap = 3  # Distancia verical entre lineas
+        self.threshold = 60
+        self.min_area = 3
+        self.max_line_gap = 7  # Distancia verical entre lineas
         self.max_char_gap = 50  # Distancia entre caracteres 
-        self.min_char_width = 18
-        self.max_char_width = 50
-        self.min_char_height = 20
-        self.max_char_height = 50
-        self.min_total_width = 60
+        self.min_char_width = 15
+        self.max_char_width = 65
+        self.min_char_height = 15
+        self.max_char_height = 65
+        self.min_total_width = 120
         self.max_total_width = 700
         self.min_total_height = 20
         self.max_total_height = 100
@@ -23,10 +24,19 @@ class TextRectanglesDetector:
 
         # Convertir la imagen a escala de grises y aplicar desenfoque
         src_gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
-        src_gray = cv.blur(src_gray, (3, 3))
+        # src_gray = cv.blur(src_gray, (3, 3))  # procesado anterior, se agregaron los tres pasos siguientes. 
+
+        src_gray = cv.medianBlur(src_gray, 3)
+
+        gamma = 1.0  # Valor del parámetro gamma (puedes ajustarlo según tus necesidades)
+        adjusted_image = np.power(src_gray/255.0, gamma)
+        adjusted_image = np.uint8(adjusted_image * 255)
+
+        adaptive_threshold = cv.adaptiveThreshold(adjusted_image, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY_INV, 11, 5)
+
 
         # Procesar la imagen
-        canny_output = cv.Canny(src_gray, self.threshold, self.threshold * 2)
+        canny_output = cv.Canny(adaptive_threshold, self.threshold, self.threshold * 2)
         contours, _ = cv.findContours(canny_output, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
         rectangles = []
@@ -67,59 +77,63 @@ class TextRectanglesDetector:
 
 
     def merge_rectangles(self, rectangles):
-        rectangles = sorted(rectangles, key=lambda r: (r[1], r[0]))  # Ordenar los rectángulos por coordenada Y y X
+        rectangles = sorted(rectangles, key=lambda r: r[1])  # Ordenar los rectángulos por coordenada Y
 
         merged_rectangles = []
         current_line = []
         prev_y = None
-        prev_x = None
 
         for rect in rectangles:
             x, y, w, h = rect
 
             if prev_y is None or y - prev_y > self.max_line_gap:
                 if current_line:
-                    merged_rectangles.extend(self.merge_line_rectangles(current_line))
-                    current_line = []
-
-            if prev_x is not None and x - prev_x > self.max_char_gap:
-                if current_line:
-                    merged_rectangles.extend(self.merge_line_rectangles(current_line))
+                    merged_rectangles.extend(self.filter_rectangles(current_line))  # Filtrar los rectángulos en la línea
                     current_line = []
 
             current_line.append(rect)
             prev_y = y
-            prev_x = x
 
         if current_line:
-            merged_rectangles.extend(self.merge_line_rectangles(current_line))
+            merged_rectangles.extend(self.filter_rectangles(current_line))  # Filtrar los rectángulos en la última línea
 
         return merged_rectangles
 
-    def merge_line_rectangles(self, rectangles):
-        merged_rectangles = []
 
-        line_rect = None
-        line_min_x = float('inf')
-        line_max_x = 0
+    def filter_rectangles(self, rectangles):
+        rectangles = sorted(rectangles, key=lambda r: r[0])  # Ordenar los rectángulos por coordenada X
+
+        filtered_rectangles = []
+        current_group = []
+        prev_x = None
 
         for rect in rectangles:
             x, y, w, h = rect
 
-            if x < line_min_x:
-                line_min_x = x
-
-            if x + w > line_max_x:
-                line_max_x = x + w
-
-            if line_rect is None:
-                line_rect = rect
+            if prev_x is None or x - prev_x <= self.max_char_gap:
+                current_group.append(rect)
             else:
-                line_rect = (line_min_x, y, line_max_x - line_min_x, h)
+                if current_group:
+                    filtered_rectangles.append(self.merge_group_rectangles(current_group))  # Fusionar rectángulos en el grupo
+                    current_group = [rect]
+                else:
+                    current_group.append(rect)
 
-        merged_rectangles.append(line_rect)
+            prev_x = x
 
-        return merged_rectangles
+        if current_group:
+            filtered_rectangles.append(self.merge_group_rectangles(current_group))  # Fusionar rectángulos en el último grupo
+
+        return filtered_rectangles
+
+
+    def merge_group_rectangles(self, group):
+        min_x = min(rect[0] for rect in group)
+        min_y = min(rect[1] for rect in group)
+        max_x = max(rect[0] + rect[2] for rect in group)
+        max_y = max(rect[1] + rect[3] for rect in group)
+
+        return (min_x, min_y, max_x - min_x, max_y - min_y)
 
 
 # Uso de la clase TextRectanglesDetector para una sola imagen
@@ -133,7 +147,7 @@ class TextRectanglesDetector:
 # Directorio de imágenes
 image_dir = 'test/img2/'
 
-# Obtener la lista de archivos .bmp en el directorio
+# Obtener la lista de archivos .bmp en el directorio  
 image_files = glob.glob(image_dir + '*.bmp')
 
 print(image_files)
