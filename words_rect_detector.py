@@ -1,6 +1,8 @@
 import cv2 as cv
 import glob
 import numpy as np
+import os
+from PIL import Image
 
 class TextRectanglesDetector:
     def __init__(self):
@@ -18,7 +20,7 @@ class TextRectanglesDetector:
         self.max_total_height = 75
         self.margin = 5
 
-    def detect_rectangles(self,image_path):
+    def detect_rectangles(self, image_path, mode = 'show'):
         # Leer la imagen de entrada
         src = cv.imread(image_path)
 
@@ -52,7 +54,8 @@ class TextRectanglesDetector:
         for rect in rectangles:  # Esta parte grafica los rectangulos de cada caracter 
             x, y, w, h = rect
             color = (0, 0, 255)
-            cv.rectangle(src,(x, y), (x + w, y + h), color, 2)
+            if mode == 'show':
+                cv.rectangle(src,(x, y), (x + w, y + h), color, 2)
 
         # Fusionar los rectángulos de cada línea de texto
         rectangles = self.merge_rectangles(rectangles)
@@ -65,7 +68,9 @@ class TextRectanglesDetector:
                  filtered_rectangles.append(rect)
 
         x_coor = min(r[0] for r in filtered_rectangles)  # creamos una coordenada "X" para referenciar los rectangulos de palabras.
-        
+
+        result = []
+
         for rect in filtered_rectangles:  # Filtramos por coordenadas "X" de los rectangulos de palabras
             x, y, w, h = rect
             x -= self.margin  # Se agrega un margin al rectangulo final para darle un poco de espacio adicional
@@ -75,10 +80,29 @@ class TextRectanglesDetector:
             if (x_coor - self.margin)  <= x <= (x_coor + (self.max_char_width)/2):  # Se verifica que la coordenada "X" de cada palabra cumplan
                     color = (255, 0, 0)
                     cv.rectangle(src, (x, y), (x + w, y + h), color, 2)
+                    result.append(rect)
+        
+        if mode == 'show':
+            cv.imshow('Contours', src)
+            cv.waitKey()
+            cv.destroyAllWindows()
+        
+        if mode == 'box':
+            return print(result)
+        
+        if mode == 'cut':
+            num = 1
+            output_dir = f'{os.path.dirname(image_path)}/output/'
+            if not os.path.exists(output_dir):
+                os.mkdir(output_dir)
 
-        cv.imshow('Contours', src)
-        cv.waitKey()
-        cv.destroyAllWindows()
+            for rect in result:
+                x, y, w, h = rect
+                cut = src[y:y+h, x:x+w]
+                name = f'{os.path.splitext(os.path.basename(image_path))[0]}_{num}.tiff'
+                output_path = os.path.join(output_dir, name)
+                num += 1
+                Image.fromarray(cut).save(output_path, format='TIFF')
 
 
     def merge_rectangles(self, rectangles):
@@ -139,7 +163,7 @@ class TextRectanglesDetector:
         max_y = max(rect[1] + rect[3] for rect in group)
 
         return (min_x, min_y, max_x - min_x, max_y - min_y)
-
+    
 
 # Uso de la clase TextRectanglesDetector para una sola imagen
 # image_path = 'test/img2/20230615131504.bmp'
@@ -159,12 +183,12 @@ image_dir = 'test/priv_img/'  # Directorio con imagenes que contienen infomraci�
 # Obtener la lista de archivos .bmp en el directorio  
 image_files = glob.glob(image_dir + '*.bmp')
 
-print(image_files)
+# print(image_files)
 
 # Crear el detector de rectángulos de texto
 detector = TextRectanglesDetector()
 
 # Procesar cada imagen (si sacamos el slice, itera sobre todas las imagenes que son 255)
-for image_file in image_files[200:]:
-    print('Procesando:', image_file)
-    detector.detect_rectangles(image_file)
+for image_file in image_files[:2]:
+    print('Procesando:', os.path.basename(image_file))
+    detector.detect_rectangles(image_file,'cut')
