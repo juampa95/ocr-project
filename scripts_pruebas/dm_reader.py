@@ -4,11 +4,21 @@ import cv2
 import pylibdmtx.pylibdmtx as dmtx
 import numpy as np
 
+# Obtener la ruta completa del script actual
+script_path = os.path.abspath(__file__)
+
+# Obtener la ruta del directorio raíz del repositorio
+repo_root = os.path.dirname(os.path.dirname(script_path))
+
 ruta_imagen = 'test/img2/20230615131504.bmp'
+
+# Ruta de la imagen recién creada
+ruta_imagen = os.path.join(repo_root,ruta_imagen)
+
 
 # DETECTAR Y DECODIFICAR DM
 def det_dm(imagen):
-    img = cv2.imread(imagen,cv2.IMREAD_GRAYSCALE)
+    img = cv2.imread(ruta_imagen,cv2.IMREAD_GRAYSCALE)
     contours, _ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     for contour in contours:

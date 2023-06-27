@@ -20,7 +20,7 @@ class TextRectanglesDetector:
         self.max_total_height = 75
         self.margin = 5
 
-    def detect_rectangles(self, image_path, mode = 'show'):
+    def detect_rectangles(self, image_path, output_dir, mode = 'show'):
         # Leer la imagen de entrada
         src = cv.imread(image_path)
 
@@ -92,14 +92,14 @@ class TextRectanglesDetector:
         
         if mode == 'cut':
             num = 1
-            output_dir = f'{os.path.dirname(image_path)}/output/'
+            # output_dir = f'{os.path.dirname(image_path)}/output/'
             if not os.path.exists(output_dir):
                 os.mkdir(output_dir)
 
             for rect in result:
                 x, y, w, h = rect
                 cut = src[y:y+h, x:x+w]
-                name = f'{os.path.splitext(os.path.basename(image_path))[0]}_{num}.tiff'
+                name = f'{os.path.splitext(os.path.basename(image_path))[0]}_{num}.tif'
                 output_path = os.path.join(output_dir, name)
                 num += 1
                 Image.fromarray(cut).save(output_path, format='TIFF')
@@ -179,9 +179,11 @@ class TextRectanglesDetector:
 # image_dir = 'test/imagenes/' # directorio incuido en el repositorio para probar scripts, pero necesita configuracion.
 
 image_dir = 'test/priv_img/'  # Directorio con imagenes que contienen infomración sensibles, por lo que no se compartira.
+output_dir = 'tesstrain/data/prueba-ground-truth'  # Path del directorio donde iran las imagenes
 
 # Obtener la lista de archivos .bmp en el directorio  
 image_files = glob.glob(image_dir + '*.bmp')
+image_files = sorted(image_files)
 
 # print(image_files)
 
@@ -189,6 +191,6 @@ image_files = glob.glob(image_dir + '*.bmp')
 detector = TextRectanglesDetector()
 
 # Procesar cada imagen (si sacamos el slice, itera sobre todas las imagenes que son 255)
-for image_file in image_files[:2]:
+for image_file in image_files[:50]:
     print('Procesando:', os.path.basename(image_file))
-    detector.detect_rectangles(image_file,'cut')
+    detector.detect_rectangles(image_file,output_dir,'cut')

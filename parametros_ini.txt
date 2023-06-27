@@ -11,3 +11,19 @@ self.max_total_width = 700
 self.min_total_height = 20
 self.max_total_height = 100
 self.margin = 5
+
+# Nuevos parametros
+
+self.threshold = 60
+self.min_area = 2  # funciona mucho mejor con un area minima mas chicha
+self.max_line_gap = 7  # Distancia verical entre lineas
+self.max_char_gap = 50  # Distancia entre caracteres 
+self.min_char_width = 15
+self.max_char_width = 65
+self.min_char_height = 15
+self.max_char_height = 65
+self.min_total_width = 120
+self.max_total_width = 700
+self.min_total_height = 20
+self.max_total_height = 75
+self.margin = 5
