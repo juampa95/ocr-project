@@ -5,7 +5,7 @@ import numpy as np
 class TextRectanglesDetector:
     def __init__(self):
         self.threshold = 60
-        self.min_area = 3
+        self.min_area = 2
         self.max_line_gap = 7  # Distancia verical entre lineas
         self.max_char_gap = 50  # Distancia entre caracteres 
         self.min_char_width = 15
@@ -15,7 +15,7 @@ class TextRectanglesDetector:
         self.min_total_width = 120
         self.max_total_width = 700
         self.min_total_height = 20
-        self.max_total_height = 100
+        self.max_total_height = 75
         self.margin = 5
 
     def detect_rectangles(self,image_path):
@@ -59,17 +59,22 @@ class TextRectanglesDetector:
 
         filtered_rectangles = []
 
-        for rect in rectangles:
+        for rect in rectangles:  # Filtramos por tamanio de rectangulo de palabras
             x, y, w, h = rect
-            x -= self.margin
+            if self.min_total_width <= w <= self.max_total_width and self.min_total_height <= h <= self.max_total_height:
+                 filtered_rectangles.append(rect)
+
+        x_coor = min(r[0] for r in filtered_rectangles)  # creamos una coordenada "X" para referenciar los rectangulos de palabras.
+        
+        for rect in filtered_rectangles:  # Filtramos por coordenadas "X" de los rectangulos de palabras
+            x, y, w, h = rect
+            x -= self.margin  # Se agrega un margin al rectangulo final para darle un poco de espacio adicional
             y -= self.margin
             w += 2 * self.margin
             h += 2 * self.margin
-
-            if self.min_total_width <= w <= self.max_total_width and self.min_total_height <= h <= self.max_total_height:
-                filtered_rectangles.append(rect)
-                color = (255, 0, 0)
-                cv.rectangle(src, (x, y), (x + w, y + h), color, 2)
+            if (x_coor - self.margin)  <= x <= (x_coor + (self.max_char_width)/2):  # Se verifica que la coordenada "X" de cada palabra cumplan
+                    color = (255, 0, 0)
+                    cv.rectangle(src, (x, y), (x + w, y + h), color, 2)
 
         cv.imshow('Contours', src)
         cv.waitKey()
@@ -145,6 +150,7 @@ class TextRectanglesDetector:
 ################# TEST VARIAS IMAGENES ###################
 
 # Directorio de imágenes
+
 # image_dir = 'test/img2/'  # directorio inculido en el repositorio para probar script. 
 # image_dir = 'test/imagenes/' # directorio incuido en el repositorio para probar scripts, pero necesita configuracion.
 
@@ -158,7 +164,7 @@ print(image_files)
 # Crear el detector de rectángulos de texto
 detector = TextRectanglesDetector()
 
-# Procesar cada imagen
-for image_file in image_files:
+# Procesar cada imagen (si sacamos el slice, itera sobre todas las imagenes que son 255)
+for image_file in image_files[200:]:
     print('Procesando:', image_file)
     detector.detect_rectangles(image_file)
