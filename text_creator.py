@@ -6,7 +6,7 @@ caracteres_por_linea = 50  # Cantidad de caracteres por línea
 
 texto_aleatorio = ''.join(random.choice(caracteres) for _ in range(cantidad_caracteres))
 
-nombre_archivo = "ocrafast.training_text"  # Nombre del archivo de texto
+nombre_archivo = "ocra2.training_text"  # Nombre del archivo de texto
 ruta_archivo = "test/" + nombre_archivo  # Ruta completa del archivo de texto
 
 with open(ruta_archivo, "w") as archivo:
