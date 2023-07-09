@@ -146,14 +146,15 @@ Ya casi podemos entrenar nuestro nuevo modelo. Pero antes debemos dar condicione
 - Deberemos descargar el archivo eng.trainnedata de este [LINK](https://github.com/tesseract-ocr/tessdata_best/blob/main/eng.traineddata) y pegarlo en `~/tesseeract/tessdata/`
 - Debemos crear una carpeta en `~/tesstrain/data/` llamada 'langdata' para ello usamos `mkdir langdata`
 
-Luego descargamos el archivo 'Latin.unicharset' (ya que utilizaremos el abeceedario Latin) de este [LINK](https://github.com/tesseract-ocr/langdata_lstm/blob/main/Latin.unicharset) y lo pegamos en esta carpeta `~/tesstrain/data/langdata/`.
+Luego descargamos el archivo 'Latin.unicharset' (ya que utilizaremos el abecedario Latin) de este [LINK](https://github.com/tesseract-ocr/langdata_lstm/blob/main/Latin.unicharset) y lo pegamos en esta carpeta `~/tesstrain/data/langdata/`.
 
 Luego descargamos el archivo 'radical-stroke.txt' de este [LINK](https://github.com/tesseract-ocr/langdata_lstm/blob/main/radical-stroke.txt) y lo pegamos en esta carpeta `~/tesstrain/data/langdata/`.
 
+---
+ENTRENAMIEENTO
+---
 
-
-
-
+TESSDATA_PREFIX=../tesseract/tessdata make training START_MODEL=eng MODEL_NAME=ocra-01 TESSDATA=../tesseract/tessdata MAX_ITERATIONS=50
 
 
 
