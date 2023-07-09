@@ -96,6 +96,10 @@ Con estos pasos concluirimaos la configuración de tesseract. Siendo que no es n
 Entrenamiento de modelo LSTM
 ---
 
+Lo que necesitamos para entrenar el modelo son 2 cosas.
+- Imagenes con texto
+- Archivo de texto ground-truth (contiene la informacion real que se visualiza en cada imagen)
+
 Para entrenar un modelo de redes neuronales en tesseract requerimos dos tipos de archivos básicos. Por un lado, la imagen que contenga texto en una sola linea y por otro un archivo '.gt.txt' que contenga el texto que podemos obsverar en la imagen. 
 
 Obtener estas imagenes del mundo real es un poco complicado, por ello podemos utilizar el script `text2image` que provee tesseract para crear imagenes a partir de un archivo de texto. Con el fin de hacer este proceso mas facil, utilice y modifique un script creado por Gabriel Garcia. Pueden entrar a su repositorio desde este link https://github.com/astutejoe/tesseract_tutorial.  El nombnre del archivo es `split_training_text.py`
@@ -104,25 +108,37 @@ Lo que hace el script, es cerar las imagenes que contengan texto en una sola lin
 
 Yo modifique el codigo fuente de Gabriel Garcia agregando algunos comentarios y parametros que permiten modificar las imagenes creadas. 
 
-Para utilizar esta herramienta, solo será necesario contar con un texto que contenga las palabras y los caracteres que queremos entrenar y la fuente .tto que podemos descargar de internet. 
+Para utilizar esta herramienta, solo será necesario contar con un texto que contenga las palabras y los caracteres que queremos entrenar y la fuente .ttf que podemos descargar de internet. 
 
-Los parametros que podemos y debemos modificar en el script son los siguientes
+Los parametros que podemos y debemos modificar en el script son los siguientes:
 
-`training_text_file = 'test/ocrafast.training_text' ` PATH a el archivo de texto con extensión .training_text
+- `training_text_file = 'test/ocrafast.training_text' ` PATH a el archivo de texto con extensión .training_text
 
-`output_directory = 'tesstrain/data/ocrafast-ground-truth'` PATH al directorio de salida, que en caso de no existir será creado. 
+Para crear estee archivo de texto, podremos hacerlo de varias formas.
+
+La mas común es utilizar el archivo eng.training_text que podemos encontrar en el repositorio oficial de tesseract `langdata_lstm` haciendo clik en este [LINK](https://github.com/tesseract-ocr/langdata_lstm/tree/main/eng)
+
+La segunda opción que se adapta mejor a lo que yo necestio, es usar el script `text_creator.py` que crea un archivo de texto que contenga los caracteres que uno necesite. En este mismo script podemos configurar el nombre del archivo final y a dondee se guardara. 
+> Esta segunda opción es la que mejor se adapta a mis necesidades ya que no necesito reconocer palabras sino caracteres que representan una codificación y no tienen relación entre si.
+
+Una tercer forma, seria utilizar un texto que se adapte mejor a las necesidades del problema. 
+
+- `output_directory = 'tesstrain/data/ocrafast-ground-truth'` PATH al directorio de salida, que en caso de no existir será creado. 
 > Es importante que el directorio de salida este en la ruta 'tesstrain/data/'
 
-`count = 100` Este parametro indicara cuantos caracteres contiene cada imagen
+- `count = 100` Este parametro indicara cuantos caracteres contiene cada imagen
 
-` file_base_name = f'ocrafast_{line_count}'` En donde se asignara el nombre a cada imagen creada seguida de un número que aumentara de manera secuencial. 
+- ` file_base_name = f'ocrafast_{line_count}'` En donde se asignara el nombre a cada imagen creada seguida de un número que aumentara de manera secuencial. 
 > Es fundamental que la primer parte del nombre de este archivo coincida con el nombre del modelo creado, en este caso 'ocrafast'
 
 Una vez configurados todos los PATH, podemos echar un vistazo al script 'text2image' que se ejecutará mediante la libreria `subprocess`. 
 
 En ella podemos modificar una gran cantidad de parametros, como el tamaño de las imagenes, la separacion de los caracteres, la exposicion, etc. Pero no será necesario modificarlos para lograr crear las imagenes y los archivos '.gt.txt.'. Pero si será necesario modificar el parametro `--font` en donde deberemos colocar el nombre de la fuente que utilizaremos para el entrenamiento.
 
+> Para agregar la fuente a utilizar en WSL deberemos ir al directorio raiz usando `cd` y lugar deberemos crear un fichero oculto llamado .fonts. Es probable que necesites permisos especiales para crear un direcotrio oculto por lo que deberas hacerlo con `sudo mkdir .fonts`. Una vez creado deberemos copiar la fuente aqui adentro y listo
+
 Otros parametros que deben estar configurados correctamente son `--text`, `--outputbase` y `--unicharset_file`.  Que no seria necesario modificar si se siguieron todos los pasos anteriores. 
+
 
 
 
