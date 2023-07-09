@@ -1,8 +1,29 @@
-Pasos para hacer el entrenamiento. Todos recomiendan hacerlo en linux, por lo que yo use WSL2 en windows, que es una maquina virtual en linux integrada a windows. Con Ubuntu 22.04
+Pasos para instalar y entrenar nuevos modelos en Tesseract 5.3.1. La recomendación general es utilizar linux, por lo que yo use WSL2 en windows, que es una maquina virtual en linux integrada a windows. Con Ubuntu 22.04 por lo que todos los comandos que veran a continuacion son ejecutados por consola.
 
-Antes de comenzar, vamos crear una carpeta en donde almacenaremos el proyecto, y dentro de ella vamos a clonar el repositorio principal de tesseract. `git clone https://github.com/tesseract-ocr/tesseract.git`
+Antes de comenzar, podemos crear un nuevo directorio en donde almacenaremos el proyecto utilizando `mkdir <nombre projecto>`, y dentro de ella vamos a clonar el repositorio actual mediante `git clone ....` o bien podemos directamente clonar el repositorio en el directorio raiz, esto creara una carpeta con el nombre `ocr-project`
 
-Debemostener todos los paquetes necesarios instalados y actualizados. En Ubuntu o WSL, puedes ejecutar el siguiente comando para actualizar e instalar los paquetes esenciales para compilar software:
+Dentro de este repositorio podemos encontrar una estructura de carpetas como la siguiente.
+
+```
+.idea
+langdata
+start_models
+tesseract
+tesstrain
+test
+..otros archivos..
+```
+> Las carpetas de tesseract y tesstrain estaran vacias, ya que debemos obtenerlas desde el repositorio oficial.
+
+---
+Configuración 
+---
+
+La configuración puede ser un tanto tediosa, y por ello es necesario seguir los pasos tal y como estan explicados a continuación:
+
+Dentro de la carpeta del proyecto, deberemos clonar el repositorio principal de tesseract. `git clone https://github.com/tesseract-ocr/tesseract.git`
+
+Para que el motor de OCR funcione, debemos contar con todos los paquetes necesarios instalados y actualizados. En Ubuntu o WSL, puedes ejecutar los siguientes comandos para actualizar e instalar los paquetes esenciales para compilar software:
 
 ```
 sudo apt update
@@ -58,4 +79,7 @@ Una vez utilizado `htop` para corroborar cuantos hilos puede utilizar, lo agrega
     sudo make training-install
 ```
 > Tambien es posible utilizar el parametro -jxx para indicar cuantos hilos utilizaremos para hacer el training. Esto hara el proceso mas rápido. 
-3.  
+3.  Dentro de la carpeta del proyecto, deberemos clonar el repositorio de tesstrain que podemos encontrar en la documentación oficial de tesseract. `git clone https://github.com/tesseract-ocr/tesstrain.git`
+
+En este nuevo directorio deberemos crear una nueva carpeta llamada `data` en donde iran nuestros archivos para entrenar los nuevos modelos. 
+
