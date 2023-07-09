@@ -90,7 +90,42 @@ cd data
 mkdir <nombre modelo>
 ```
 
-Con estos pasos concluirimaos la configuración de tesseract. Siendo que no es necesario volver a realizarla para entreenar nuevos modelos, el unico paso que debera repetir, es el paso N°6 y lo que veremos a continuación
+Con estos pasos concluirimaos la configuración de tesseract. Siendo que no es necesario volver a realizarla para entreenar nuevos modelos, el unico paso que debera repetir, es el paso N°4 y lo que veremos a continuación
+
+---
+Entrenamiento de modelo LSTM
+---
+
+Para entrenar un modelo de redes neuronales en tesseract requerimos dos tipos de archivos básicos. Por un lado, la imagen que contenga texto en una sola linea y por otro un archivo '.gt.txt' que contenga el texto que podemos obsverar en la imagen. 
+
+Obtener estas imagenes del mundo real es un poco complicado, por ello podemos utilizar el script `text2image` que provee tesseract para crear imagenes a partir de un archivo de texto. Con el fin de hacer este proceso mas facil, utilice y modifique un script creado por Gabriel Garcia. Pueden entrar a su repositorio desde este link https://github.com/astutejoe/tesseract_tutorial.  El nombnre del archivo es `split_training_text.py`
+
+Lo que hace el script, es cerar las imagenes que contengan texto en una sola linea y los archivos '.gt.txt' necesarios para el entrenamiento. 
+
+Yo modifique el codigo fuente de Gabriel Garcia agregando algunos comentarios y parametros que permiten modificar las imagenes creadas. 
+
+Para utilizar esta herramienta, solo será necesario contar con un texto que contenga las palabras y los caracteres que queremos entrenar y la fuente .tto que podemos descargar de internet. 
+
+Los parametros que podemos y debemos modificar en el script son los siguientes
+
+`training_text_file = 'test/ocrafast.training_text' ` PATH a el archivo de texto con extensión .training_text
+
+`output_directory = 'tesstrain/data/ocrafast-ground-truth'` PATH al directorio de salida, que en caso de no existir será creado. 
+> Es importante que el directorio de salida este en la ruta 'tesstrain/data/'
+
+`count = 100` Este parametro indicara cuantos caracteres contiene cada imagen
+
+` file_base_name = f'ocrafast_{line_count}'` En donde se asignara el nombre a cada imagen creada seguida de un número que aumentara de manera secuencial. 
+> Es fundamental que la primer parte del nombre de este archivo coincida con el nombre del modelo creado, en este caso 'ocrafast'
+
+Una vez configurados todos los PATH, podemos echar un vistazo al script 'text2image' que se ejecutará mediante la libreria `subprocess`. 
+
+En ella podemos modificar una gran cantidad de parametros, como el tamaño de las imagenes, la separacion de los caracteres, la exposicion, etc. Pero no será necesario modificarlos para lograr crear las imagenes y los archivos '.gt.txt.'. Pero si será necesario modificar el parametro `--font` en donde deberemos colocar el nombre de la fuente que utilizaremos para el entrenamiento.
+
+Otros parametros que deben estar configurados correctamente son `--text`, `--outputbase` y `--unicharset_file`.  Que no seria necesario modificar si se siguieron todos los pasos anteriores. 
+
+
+
 
 
 
