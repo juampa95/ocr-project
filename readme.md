@@ -1,9 +1,18 @@
 Pasos para hacer el entrenamiento. Todos recomiendan hacerlo en linux, por lo que yo use WSL2 en windows, que es una maquina virtual en linux integrada a windows. Con Ubuntu 22.04
 
-1.  Primero instalar todo como se sugiere aca https://tesseract-ocr.github.io/tessdoc/Compiling.html
+Antes de comenzar, vamos crear una carpeta en donde almacenaremos el proyecto, y dentro de ella vamos a clonar el repositorio principal de tesseract. `git clone https://github.com/tesseract-ocr/tesseract.git`
+
+Debemostener todos los paquetes necesarios instalados y actualizados. En Ubuntu o WSL, puedes ejecutar el siguiente comando para actualizar e instalar los paquetes esenciales para compilar software:
 
 ```
-sudo apt-get install g++ # or clang++ (presumably)
+sudo apt update
+sudo apt-get install build-essential
+```
+
+1.  Primero instalar todo como se sugiere en la guia oficial, que pueden encontrarla aca aca https://tesseract-ocr.github.io/tessdoc/Compiling.html. O seguir los pasos siguientes.
+
+```
+sudo apt-get install g++
 sudo apt-get install autoconf automake libtool
 sudo apt-get install pkg-config
 sudo apt-get install libpng-dev
@@ -15,7 +24,7 @@ sudo apt-get install libopenjp2-7-dev
 sudo apt-get install libgif-dev
 sudo apt-get install libarchive-dev libcurl4-openssl-dev
 ```
-Luego como vamos a hacer entrenamiento de modelos, tenemos que instalar 
+Para poder entrenar modelos propios debereemos instalar lo siguiente:
 
 ```
 sudo apt-get install libicu-dev
@@ -27,9 +36,26 @@ Luego instalamos Leptonica
 ```
 sudo apt-get install libleptonica-dev
 ```
-2.  Luego tenemos que clonar los repositorios oficiales de tesseract-ocr. Yo recomiendo hacerlo dentro de un directorio para el proyecto actual 
+2.  Luego tenemos que configurar tesseract. Para ello, vamos a utilzar el siguiente procedimiento.
 
-tesseract
 ```
-git clone https://github.com/tesseract-ocr/tesseract.git
+    cd tesseract
+    ./autogen.sh
+    ./configure --disable-debug 'CXXFLAGS=-g -O3'
 ```
+>  los parametros --disable-debug 'CXXFLAGS=-g -O3' son para que la configuracion se realice mas rapido, deshabilitando el debug y activando el multihilo. No es necesario utilizarlos
+> 
+>  También existe la opción de utilizar --disable-openmp para deshabilitar el multihilo que puede ser util en algunos proyectos. 
+
+En caso de querer mayor rendimiento utilizaremos el multihilo. Mediante el comando `htop` podemos ver cuantos nucleos o hilos tiene su procesador con el fin de utlizarlos todos para que el proceso sea lo mas rapido posible. En algunos casos, esta configuración multihilo no es estable, aunuqe yo no he tenido problema algunno. 
+Una vez utilizado `htop` para corroborar cuantos hilos puede utilizar, lo agregara a continuacion del proximo comando `make` como se ve a continuación. En mi caso, tengo 11 hilos disponibles por lo que agrego el termino `make -j11`
+
+```
+    make -j11
+    sudo make install
+    sudo ldconfig
+    make training -j11
+    sudo make training-install
+```
+> Tambien es posible utilizar el parametro -jxx para indicar cuantos hilos utilizaremos para hacer el training. Esto hara el proceso mas rápido. 
+3.  
