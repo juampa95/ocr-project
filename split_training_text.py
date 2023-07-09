@@ -11,14 +11,14 @@ with open(training_text_file, 'r') as input_file:
     for line in input_file.readlines():
         lines.append(line.strip())
 
-output_directory = 'tesstrain/data/ocra2-ground-truth'  # Directorio de salida, se crea solo si no existe.
+output_directory = 'tesstrain/data/ocrafast-ground-truth'  # Directorio de salida, se crea solo si no existe.
 
 if not os.path.exists(output_directory):
     os.mkdir(output_directory)
 
 random.shuffle(lines)
 
-count = 1
+count = 100
 
 lines = lines[:count]
 
