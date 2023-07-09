@@ -184,3 +184,27 @@ Loaded file data/ocra-01/checkpoints/ocra-01_checkpoint, unpacking...
 Como podemos ver, el modelo entrenado con  5000 lineas de texto que contien 50 caracteres cada una, arroja un error de un 0.008%. Lo que podria considerarse como excelente. 
 
 Dejare el archivo entrenado con el nombre ocra-01.traineddata disponible para que lo descarguen. 
+
+Para testear el modelo con una imagen, pueden hacerlo desde la consola de WSL ingresando
+
+```
+ tesseract ~/ocr-project/test/imagenes/20230420142011.bmp prueba1 --tessdata-dir ~/ocr-project/modelo_final/ -l ocra-01
+```
+
+Esto creará un archivo .txt llamado prueba1 en el directorio donde ejecuten el comando. Yo lo hice en la carpeta que dice modelo_final. Pueden encontrar los resultados alli. 
+
+ La imagen utilizada fue esta
+
+ <img>
+
+ El resultado arrojado por Tesseract con el modelo ocra-01 fue el siguiente y puede verse en el archivo prueba1.txt en la carpeta modelp_final
+
+```
+TES23061510011
+0235869U
+
+14/01/2023
+25/01/2025
+```
+
+ 
