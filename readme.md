@@ -112,7 +112,7 @@ Para utilizar esta herramienta, solo será necesario contar con un texto que con
 
 Los parametros que podemos y debemos modificar en el script son los siguientes:
 
-- `training_text_file = 'test/ocrafast.training_text' ` PATH a el archivo de texto con extensión .training_text
+- `training_text_file = 'test/<nombre_archivo>.training_text' ` PATH a el archivo de texto con extensión .training_text
 
 Para crear estee archivo de texto, podremos hacerlo de varias formas.
 
@@ -123,12 +123,12 @@ La segunda opción que se adapta mejor a lo que yo necestio, es usar el script `
 
 Una tercer forma, seria utilizar un texto que se adapte mejor a las necesidades del problema. 
 
-- `output_directory = 'tesstrain/data/ocrafast-ground-truth'` PATH al directorio de salida, que en caso de no existir será creado. 
+- `output_directory = 'tesstrain/data/<nombre_archivo>-ground-truth'` PATH al directorio de salida, que en caso de no existir será creado. 
 > Es importante que el directorio de salida este en la ruta 'tesstrain/data/'
 
 - `count = 100` Este parametro indicara cuantos caracteres contiene cada imagen
 
-- ` file_base_name = f'ocrafast_{line_count}'` En donde se asignara el nombre a cada imagen creada seguida de un número que aumentara de manera secuencial. 
+- ` file_base_name = f'<nombre_archivo>_{line_count}'` En donde se asignara el nombre a cada imagen creada seguida de un número que aumentara de manera secuencial. 
 > Es fundamental que la primer parte del nombre de este archivo coincida con el nombre del modelo creado, en este caso 'ocrafast'
 
 Una vez configurados todos los PATH, podemos echar un vistazo al script 'text2image' que se ejecutará mediante la libreria `subprocess`. 
@@ -138,6 +138,20 @@ En ella podemos modificar una gran cantidad de parametros, como el tamaño de la
 > Para agregar la fuente a utilizar en WSL deberemos ir al directorio raiz usando `cd` y lugar deberemos crear un fichero oculto llamado .fonts. Es probable que necesites permisos especiales para crear un direcotrio oculto por lo que deberas hacerlo con `sudo mkdir .fonts`. Una vez creado deberemos copiar la fuente aqui adentro y listo
 
 Otros parametros que deben estar configurados correctamente son `--text`, `--outputbase` y `--unicharset_file`.  Que no seria necesario modificar si se siguieron todos los pasos anteriores. 
+
+Una vez que todo este configurado, nos vamos al directorio raiz del proyecto y podemos ejecutar el script split_training_text.py que creara los archivos .tif de imagen y los archivos .gt.txt de texto en la ruta especificada. 
+
+
+Ya casi podemos entrenar nuestro nuevo modelo. Pero antes debemos dar condiciones iniciales para comenzar el entrenamiento:
+- Deberemos descargar el archivo eng.trainnedata de este [LINK](https://github.com/tesseract-ocr/tessdata_best/blob/main/eng.traineddata) y pegarlo en `~/tesseeract/tessdata/`
+- Debemos crear una carpeta en `~/tesstrain/data/` llamada 'langdata' para ello usamos `mkdir langdata`
+
+Luego descargamos el archivo 'Latin.unicharset' (ya que utilizaremos el abeceedario Latin) de este [LINK](https://github.com/tesseract-ocr/langdata_lstm/blob/main/Latin.unicharset) y lo pegamos en esta carpeta `~/tesstrain/data/langdata/`.
+
+Luego descargamos el archivo 'radical-stroke.txt' de este [LINK](https://github.com/tesseract-ocr/langdata_lstm/blob/main/radical-stroke.txt) y lo pegamos en esta carpeta `~/tesstrain/data/langdata/`.
+
+
+
 
 
 
