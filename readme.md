@@ -151,12 +151,36 @@ Luego descargamos el archivo 'Latin.unicharset' (ya que utilizaremos el abecedar
 Luego descargamos el archivo 'radical-stroke.txt' de este [LINK](https://github.com/tesseract-ocr/langdata_lstm/blob/main/radical-stroke.txt) y lo pegamos en esta carpeta `~/tesstrain/data/langdata/`.
 
 ---
-ENTRENAMIEENTO
+ENTRENAMIENTO
 ---
 
-TESSDATA_PREFIX=../tesseract/tessdata make training START_MODEL=eng MODEL_NAME=ocra-01 TESSDATA=../tesseract/tessdata MAX_ITERATIONS=50
+Para entrenar el modelo deberemos colocar esta linea de comandos 
+```
+TESSDATA_PREFIX=../tesseract/tessdata make training START_MODEL=eng MODEL_NAME=ocra-01 TESSDATA=../tesseract/tessdata MAX_ITERATIONS=5000
+```
 
+En donde:
 
+- TESSDATA_PREFIX: indica la ruta del directorio tessdata 
+- START_MODEL: indica el modelo que se tomara como base para entrenar
+- MODEL_NAME: es el nombre de nuestro nuevo modelo (que debe coincidir con lo utilizando en el script text_creator.py e split_training_text.py)
+- TESSDATA: indica nuevamente la ruta del directorio tessdata
+- MAX_ITERATIONS: indica la cantidad maxima de iteracciones. En este caso utilice 5000
 
+Resultados de ultimo checkpoint:
 
+```
+2 Percent improvement time=7, best error was 2.646 @ 94
+At iteration 101/1500/1500, Mean rms=0.073000%, delta=0.001000%, BCER train=0.008000%, BWER train=0.233000%, skip ratio=0.000000%,  New best BCER = 0.008000 wrote best model:data/ocra-01/checkpoints/ocra-01_0.008000_101_1500.checkpoint wrote checkpoint.
 
+Finished! Selected model with minimal training error rate (BCER) = 0.008
+lstmtraining \
+--stop_training \
+--continue_from data/ocra-01/checkpoints/ocra-01_checkpoint \
+--traineddata data/ocra-01/ocra-01.traineddata \
+--model_output data/ocra-01.traineddata
+Loaded file data/ocra-01/checkpoints/ocra-01_checkpoint, unpacking...
+```
+Como podemos ver, el modelo entrenado con  5000 lineas de texto que contien 50 caracteres cada una, arroja un error de un 0.008%. Lo que podria considerarse como excelente. 
+
+Dejare el archivo entrenado con el nombre ocra-01.traineddata disponible para que lo descarguen. 
