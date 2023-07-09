@@ -195,7 +195,11 @@ Esto creará un archivo .txt llamado prueba1 en el directorio donde ejecuten el 
 
  La imagen utilizada fue esta
 
- <img>
+</div>
+
+<div align="center">
+  <img src="test/img2/20230615131504.bmp" width="512" height="409"/>
+</div>
 
  El resultado arrojado por Tesseract con el modelo ocra-01 fue el siguiente y puede verse en el archivo prueba1.txt en la carpeta modelp_final
 
@@ -206,5 +210,10 @@ TES23061510011
 14/01/2023
 25/01/2025
 ```
+
+Utilicen el modelo entrenado o entrenen nuevos modelos con este método y obtendran resultados muy buenos. Por lo genera, es necesario utilizar una gran cantidad de imagenes. En mi caso yo utilice unas 5000 pero mi modelo solo debe reconocer letras mayúsculas y números. 
+
+Cualquier duda o problema que tengan configurando Tesseract o utilizando algunos de los scripts que he creado, me hablan e intento ayudarlos. 
+
 
  
