@@ -69,6 +69,7 @@ sudo apt-get install libleptonica-dev
 >  También existe la opción de utilizar --disable-openmp para deshabilitar el multihilo que puede ser util en algunos proyectos. 
 
 En caso de querer mayor rendimiento utilizaremos el multihilo. Mediante el comando `htop` podemos ver cuantos nucleos o hilos tiene su procesador con el fin de utlizarlos todos para que el proceso sea lo mas rapido posible. En algunos casos, esta configuración multihilo no es estable, aunuqe yo no he tenido problema algunno. 
+
 Una vez utilizado `htop` para corroborar cuantos hilos puede utilizar, lo agregara a continuacion del proximo comando `make` como se ve a continuación. En mi caso, tengo 11 hilos disponibles por lo que agrego el termino `make -j11`
 
 ```
@@ -82,4 +83,14 @@ Una vez utilizado `htop` para corroborar cuantos hilos puede utilizar, lo agrega
 3.  Dentro de la carpeta del proyecto, deberemos clonar el repositorio de tesstrain que podemos encontrar en la documentación oficial de tesseract. `git clone https://github.com/tesseract-ocr/tesstrain.git`
 
 En este nuevo directorio deberemos crear una nueva carpeta llamada `data` en donde iran nuestros archivos para entrenar los nuevos modelos. 
+
+4.  Dentro del directorio `data` tendremos que crear un nuevo directorio con el nombre del modelo a entrenar. Es importante recordar en todo momento que el nombre del modelo deberá ser usado para crear otros archivos y directorios, por lo que se sugiere utilizar algo sencillo. También existen recomendaciones y buenas practicas en la documentación oficial de tesseract de como deberiamos nombrar a estos nuevos modelos.
+```
+cd data
+mkdir <nombre modelo>
+```
+
+Con estos pasos concluirimaos la configuración de tesseract. Siendo que no es necesario volver a realizarla para entreenar nuevos modelos, el unico paso que debera repetir, es el paso N°6 y lo que veremos a continuación
+
+
 
