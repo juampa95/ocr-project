@@ -3,7 +3,7 @@ import random
 import pathlib
 import subprocess
 
-training_text_file = 'test/ocrafast.training_text'  # Texto para entrenamiento
+training_text_file = 'test/ocra-01.training_text'  # Texto para entrenamiento
 
 lines = []
 
@@ -11,14 +11,14 @@ with open(training_text_file, 'r') as input_file:
     for line in input_file.readlines():
         lines.append(line.strip())
 
-output_directory = 'tesstrain/data/ocrafast-ground-truth'  # Directorio de salida, se crea solo si no existe.
+output_directory = 'tesstrain/data/ocra-01-ground-truth'  # Directorio de salida, se crea solo si no existe.
 
 if not os.path.exists(output_directory):
     os.mkdir(output_directory)
 
 random.shuffle(lines)
 
-count = 100
+count = 5000
 
 lines = lines[:count]
 
@@ -29,7 +29,7 @@ for line in lines:
     with open(line_training_text, 'w') as output_file:
         output_file.writelines([line])
 
-    file_base_name = f'ocrafast_{line_count}'  # El nombre tiene que coincidir con el de las carpetas, sino falla. 
+    file_base_name = f'ocra-01_{line_count}'  # El nombre tiene que coincidir con el de las carpetas, sino falla. 
 
     subprocess.run([
         'text2image',
