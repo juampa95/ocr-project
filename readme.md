@@ -215,5 +215,9 @@ Utilicen el modelo entrenado o entrenen nuevos modelos con este método y obtend
 
 Cualquier duda o problema que tengan configurando Tesseract o utilizando algunos de los scripts que he creado, me hablan e intento ayudarlos. 
 
+El proyecto básico estaria finalizado, pero aun quedan mas cosas por hacer
 
+- Introducir ruido y deformaciones a las imagenes de entrenamiento para hacer que el modelo se adapte mejor a la realidad
+- Buscar el checkpoint que ofrezca mayor beneficio y menor demora en el procesamiento.
+- Seccionar imagenes automaticamente para hacer el reconocimiento mas eficiente y veloz. 
  
